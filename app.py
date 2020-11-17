@@ -1,6 +1,6 @@
 import streamlit as st
 from PIL import Image
-
+import requests
 
 def main():
   
@@ -22,6 +22,19 @@ def main():
 		image_path = "saved_image.jpg"
 		st.image(image1)
 
+	if st.button("Generate Caption"):
+		if image_file is not None:
+			r = requests.post(
+			    "https://api.deepai.org/api/neuraltalk",
+			    files={
+			        'image': open('saved_image.jpg', 'rb'),
+			    },
+			    headers={'api-key': 'aa48ee59-f392-4783-b1ac-ab410534ca61'}
+			)
+			output = r.json()["output"].title()
+			st.warning('Output : "{}"'.format(output))
+		else:
+			st.error("Please Upload Image!!!")
 
 if __name__== "__main__":
 	main()
